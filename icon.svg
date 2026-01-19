@@ -1,0 +1,16 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" rx="24" fill="#2C3E50"/>
+  
+  <!-- "M" mark -->
+  <path d="M34 38V66L64 84L94 66V38" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M34 38L64 58L94 38" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Table Grid lines below M -->
+  <!-- Horizontal line -->
+  <line x1="34" y1="94" x2="94" y2="94" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Vertical lines implying columns -->
+  <line x1="64" y1="88" x2="64" y2="108" stroke="white" stroke-width="8" stroke-linecap="round"/>
+</svg>
+

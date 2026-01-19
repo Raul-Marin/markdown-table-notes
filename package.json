@@ -1,0 +1,23 @@
+{
+  "name": "markdown-table-notes",
+  "version": "1.0.0",
+  "description": "Figma Widget for rendering Markdown with full table support",
+  "main": "dist/widget.js",
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "dev": "node esbuild.config.mjs --watch"
+  },
+  "keywords": [
+    "figma",
+    "widget",
+    "markdown"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@figma/widget-typings": "^1.9.1",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.3"
+  }
+}

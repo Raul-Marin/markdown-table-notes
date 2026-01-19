@@ -1,0 +1,11 @@
+{
+  "name": "Markdown Table Notes",
+  "id": "1594023679858160179",
+  "api": "1.0.0",
+  "widgetApi": "1.0.0",
+  "main": "dist/widget.js",
+  "editorType": ["figma", "figjam"],
+  "containsWidget": true,
+  "networkAccess": { "allowedDomains": ["none"] },
+  "documentAccess": "dynamic-page"
+}
