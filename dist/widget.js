@@ -1,5 +1,8 @@
 "use strict";
 
+// src/logo-data.ts
+var LOGO_SRC = "data:image/png;base64,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";
+
 // src/widget.tsx
 var widgetAPI = figma.widget;
 var lightTheme = {
@@ -8,7 +11,7 @@ var lightTheme = {
   textMuted: "#666666",
   background: "#ffffff",
   backgroundCode: "#f6f8fa",
-  backgroundTableHeader: "#f6f8fa",
+  backgroundTableHeader: "#EFF5FF",
   backgroundTableRow: "#ffffff",
   backgroundTableRowAlt: "#f9fafb",
   border: "#d0d7de",
@@ -23,7 +26,7 @@ var darkTheme = {
   textMuted: "#a0a0a0",
   background: "#1e1e1e",
   backgroundCode: "#2d2d2d",
-  backgroundTableHeader: "#2d2d2d",
+  backgroundTableHeader: "#323232",
   backgroundTableRow: "#1e1e1e",
   backgroundTableRowAlt: "#252525",
   border: "#404040",
@@ -32,8 +35,8 @@ var darkTheme = {
   checkboxBorder: "#404040",
   checkboxChecked: "#58a6ff"
 };
-var DEFAULT_MD = "# Markdown Table Notes\n\nThis is **Markdown Table Notes** - a Figma widget with full Markdown support!\n\n## Features\n\n- Visual tables\n- Checkboxes\n- Nested lists\n- Clickable links\n- Color swatches (e.g. #1a4cb3)\n\n## Table Example\n\n| Feature | Status |\n|---------|--------|\n| Tables | \u2705 |\n| Checkboxes | \u2705 |\n| Links | \u2705 |\n\n## Color Tokens\n\n| Token | Hex Value |\n|-------|----------|\n| primary | #1a4cb3 |\n| error | #ba1b1b |\n| surface | #e3e6eb |\n\n## Task List\n\n- [x] Implement tables\n- [x] Add checkbox support\n- [ ] Add more features\n\n## Links\n\nVisit [Figma Community](https://figma.com/community) for more widgets.\n\n---\n\nClick Edit to modify.";
-var WIDTH_CYCLE = [400, 600, 800, 1200];
+var DEFAULT_MD = "Paste your Markdown here.";
+var WIDTH_CYCLE = [400, 600, 800, 1200, 1760];
 function parseMarkdown(md) {
   var blocks = [];
   var lines = md.split("\n");
@@ -230,6 +233,8 @@ function PerfectMarkdown() {
   var AutoLayout = widgetAPI.AutoLayout;
   var Text = widgetAPI.Text;
   var Rectangle = widgetAPI.Rectangle;
+  var Image = widgetAPI.Image;
+  var Input = widgetAPI.Input;
   var h = widgetAPI.h;
   var mdState = useSyncedState("md", DEFAULT_MD);
   var md = mdState[0];
@@ -240,6 +245,9 @@ function PerfectMarkdown() {
   var tState = useSyncedState("t", "light");
   var tn = tState[0];
   var setT = tState[1];
+  var titleState = useSyncedState("title", "");
+  var title = titleState[0];
+  var setTitle = titleState[1];
   var theme = tn === "light" ? lightTheme : darkTheme;
   var cw = w - 40;
   function cycleWidth() {
@@ -262,6 +270,8 @@ function PerfectMarkdown() {
       return "L";
     if (w === 1200)
       return "XL";
+    if (w === 1760)
+      return "XXL";
     return w + "";
   }
   usePropertyMenu(
@@ -278,7 +288,8 @@ function PerfectMarkdown() {
           { option: "400", label: "Small" },
           { option: "600", label: "Medium" },
           { option: "800", label: "Large" },
-          { option: "1200", label: "Full" }
+          { option: "1200", label: "Full" },
+          { option: "1760", label: "XXL" }
         ]
       },
       {
@@ -621,9 +632,6 @@ function PerfectMarkdown() {
             key: "th" + thi,
             width: colWidth,
             padding: 10,
-            stroke: theme.border,
-            strokeWidth: 1,
-            strokeAlign: "inside",
             direction: "horizontal",
             wrap: true,
             verticalAlignItems: "center"
@@ -670,9 +678,6 @@ function PerfectMarkdown() {
               key: "td" + ri + "-" + tci,
               width: colWidth,
               padding: 10,
-              stroke: theme.border,
-              strokeWidth: 1,
-              strokeAlign: "inside",
               direction: "horizontal",
               wrap: true,
               verticalAlignItems: "center"
@@ -691,8 +696,6 @@ function PerfectMarkdown() {
           h(AutoLayout, {
             direction: "vertical",
             width: cw,
-            stroke: theme.border,
-            strokeWidth: 1,
             cornerRadius: 6,
             overflow: "hidden"
           }, tableRows)
@@ -703,11 +706,28 @@ function PerfectMarkdown() {
   return h(
     AutoLayout,
     {
-      name: "Markdown Table Notes",
+      name: "Craft#DS md notes",
       direction: "vertical",
       width: w,
       fill: theme.background,
-      cornerRadius: 8,
+      cornerRadius: 12,
+      stroke: [
+        {
+          type: "gradient-linear",
+          gradientHandlePositions: [
+            { x: 0, y: 0 },
+            { x: 1, y: 1 },
+            { x: 0, y: 1 }
+          ],
+          gradientStops: [
+            { position: 0, color: { r: 0.231, g: 0.51, b: 0.965, a: 1 } },
+            { position: 0.5, color: { r: 0.659, g: 0.333, b: 0.969, a: 1 } },
+            { position: 1, color: { r: 0.925, g: 0.286, b: 0.6, a: 1 } }
+          ]
+        }
+      ],
+      strokeWidth: 2,
+      strokeAlign: "inside",
       effect: { type: "drop-shadow", color: { r: 0, g: 0, b: 0, a: 0.1 }, offset: { x: 0, y: 2 }, blur: 8 }
     },
     h(
@@ -716,38 +736,99 @@ function PerfectMarkdown() {
         direction: "horizontal",
         width: "fill-parent",
         padding: { horizontal: 12, vertical: 8 },
-        fill: "#1a1a1a",
-        cornerRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 },
+        fill: tn === "light" ? "#ffffff" : "#1a1a1a",
+        stroke: tn === "light" ? "#e5e7eb" : "#1a1a1a",
+        strokeWidth: 1,
+        strokeAlign: "inside",
+        cornerRadius: { topLeft: 12, topRight: 12, bottomLeft: 0, bottomRight: 0 },
         verticalAlignItems: "center"
       },
       h(
         AutoLayout,
         { width: "fill-parent" },
-        h(Text, { fontSize: 13, fontWeight: 600, fill: "#a855f7" }, "Md "),
-        h(Text, { fontSize: 13, fill: "#fff" }, "Markdown Table Notes")
+        h(Image, {
+          width: 155,
+          height: 36,
+          src: LOGO_SRC
+        })
       ),
       h(
         AutoLayout,
         {
-          padding: { horizontal: 10, vertical: 6 },
-          fill: "#333",
-          cornerRadius: 4,
-          hoverStyle: { fill: "#444" },
-          onClick: function() {
-            return new Promise(function(resolve) {
-              var esc = md.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-              figma.showUI('<html><head><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;padding:16px;height:100vh;display:flex;flex-direction:column;background:#f5f5f5}textarea{flex:1;width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-family:monospace;font-size:13px;resize:none}button{margin-top:12px;padding:10px 20px;background:#0066ff;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px}</style></head><body><textarea id="e">' + esc + `</textarea><button onclick="parent.postMessage({pluginMessage:{t:'s',v:document.getElementById('e').value}},'*')">Save</button></body></html>`, { width: 500, height: 400 });
-              figma.ui.onmessage = function(msg) {
-                if (msg.t === "s")
-                  setMd(msg.v);
-                figma.closePlugin();
-                resolve();
-              };
-            });
-          }
+          direction: "horizontal",
+          spacing: 6,
+          flexShrink: 0
         },
-        h(Text, { fontSize: 12, fill: "#fff" }, "Edit")
+        h(
+          AutoLayout,
+          {
+            padding: { horizontal: 10, vertical: 6 },
+            fill: tn === "light" ? "#f3f4f6" : "#333333",
+            stroke: tn === "light" ? "#d1d5db" : "#333333",
+            strokeWidth: 1,
+            cornerRadius: 4,
+            hoverStyle: { fill: tn === "light" ? "#e5e7eb" : "#444444" },
+            onClick: function() {
+              return new Promise(function(resolve) {
+                var esc = md.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                figma.showUI('<html><head><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;padding:16px;height:100vh;display:flex;flex-direction:column;background:#f5f5f5}textarea{flex:1;width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-family:monospace;font-size:13px;resize:none}button{margin-top:12px;padding:10px 20px;background:#0066ff;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px}</style></head><body><textarea id="e">' + esc + `</textarea><button onclick="parent.postMessage({pluginMessage:{t:'s',v:document.getElementById('e').value}},'*')">Save</button></body></html>`, { width: 500, height: 400 });
+                figma.ui.onmessage = function(msg) {
+                  if (msg.t === "s")
+                    setMd(msg.v);
+                  figma.closePlugin();
+                  resolve();
+                };
+              });
+            }
+          },
+          h(Text, { fontSize: 12, fill: tn === "light" ? "#374151" : "#ffffff" }, "Edit")
+        ),
+        h(
+          AutoLayout,
+          {
+            padding: { horizontal: 10, vertical: 6 },
+            fill: tn === "light" ? "#f3f4f6" : "#333333",
+            stroke: tn === "light" ? "#d1d5db" : "#333333",
+            strokeWidth: 1,
+            cornerRadius: 4,
+            hoverStyle: { fill: tn === "light" ? "#e5e7eb" : "#444444" },
+            onClick: function() {
+              return new Promise(function(resolve) {
+                var escaped = md.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                figma.showUI('<html><body><textarea id="t">' + escaped + '</textarea><script>var t=document.getElementById("t");t.select();document.execCommand("copy");parent.postMessage({pluginMessage:{t:"done"}},"*");<\/script></body></html>', { width: 1, height: 1, title: "" });
+                figma.ui.onmessage = function(msg) {
+                  if (msg.t === "done") {
+                    figma.closePlugin();
+                    figma.notify("\u2713 Markdown copied!", { timeout: 2e3 });
+                    resolve();
+                  }
+                };
+              });
+            }
+          },
+          h(Text, { fontSize: 12, fill: tn === "light" ? "#374151" : "#ffffff" }, "Copy md")
+        )
       )
+    ),
+    h(
+      AutoLayout,
+      {
+        direction: "vertical",
+        width: "fill-parent",
+        padding: { top: 20, horizontal: 20, bottom: 0 }
+      },
+      h(Input, {
+        value: title,
+        placeholder: "Add a title\u2026",
+        onTextEditEnd: function(e) {
+          setTitle(e.characters);
+        },
+        fontSize: 24,
+        fontWeight: 700,
+        fill: tn === "light" ? "#1a1a1a" : "#f0f0f0",
+        width: "fill-parent",
+        inputBehavior: "truncate"
+      })
     ),
     h(AutoLayout, {
       direction: "vertical",

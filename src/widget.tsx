@@ -1,4 +1,5 @@
-// Markdown Table Notes Widget - With Full Markdown Support
+// Craft#DS md notes Widget - With Full Markdown Support
+import { LOGO_SRC } from './logo-data';
 var widgetAPI = figma.widget;
 
 var lightTheme = {
@@ -7,7 +8,7 @@ var lightTheme = {
   textMuted: '#666666',
   background: '#ffffff',
   backgroundCode: '#f6f8fa',
-  backgroundTableHeader: '#f6f8fa',
+  backgroundTableHeader: '#EFF5FF',
   backgroundTableRow: '#ffffff',
   backgroundTableRowAlt: '#f9fafb',
   border: '#d0d7de',
@@ -23,7 +24,7 @@ var darkTheme = {
   textMuted: '#a0a0a0',
   background: '#1e1e1e',
   backgroundCode: '#2d2d2d',
-  backgroundTableHeader: '#2d2d2d',
+  backgroundTableHeader: '#323232',
   backgroundTableRow: '#1e1e1e',
   backgroundTableRowAlt: '#252525',
   border: '#404040',
@@ -33,9 +34,9 @@ var darkTheme = {
   checkboxChecked: '#58a6ff',
 };
 
-var DEFAULT_MD = '# Markdown Table Notes\n\nThis is **Markdown Table Notes** - a Figma widget with full Markdown support!\n\n## Features\n\n- Visual tables\n- Checkboxes\n- Nested lists\n- Clickable links\n- Color swatches (e.g. #1a4cb3)\n\n## Table Example\n\n| Feature | Status |\n|---------|--------|\n| Tables | ✅ |\n| Checkboxes | ✅ |\n| Links | ✅ |\n\n## Color Tokens\n\n| Token | Hex Value |\n|-------|----------|\n| primary | #1a4cb3 |\n| error | #ba1b1b |\n| surface | #e3e6eb |\n\n## Task List\n\n- [x] Implement tables\n- [x] Add checkbox support\n- [ ] Add more features\n\n## Links\n\nVisit [Figma Community](https://figma.com/community) for more widgets.\n\n---\n\nClick Edit to modify.';
+var DEFAULT_MD = 'Paste your Markdown here.';
 
-var WIDTH_CYCLE = [400, 600, 800, 1200];
+var WIDTH_CYCLE = [400, 600, 800, 1200, 1760];
 
 function parseMarkdown(md) {
   var blocks = [];
@@ -279,6 +280,8 @@ function PerfectMarkdown() {
   var AutoLayout = widgetAPI.AutoLayout;
   var Text = widgetAPI.Text;
   var Rectangle = widgetAPI.Rectangle;
+  var Image = widgetAPI.Image;
+  var Input = widgetAPI.Input;
   var h = widgetAPI.h;
 
   var mdState = useSyncedState('md', DEFAULT_MD);
@@ -292,6 +295,11 @@ function PerfectMarkdown() {
   var tState = useSyncedState('t', 'light');
   var tn = tState[0];
   var setT = tState[1];
+
+  var titleState = useSyncedState('title', '');
+  var title = titleState[0];
+  var setTitle = titleState[1];
+
 
   var theme = tn === 'light' ? lightTheme : darkTheme;
   var cw = w - 40;
@@ -315,6 +323,7 @@ function PerfectMarkdown() {
     if (w === 600) return 'M';
     if (w === 800) return 'L';
     if (w === 1200) return 'XL';
+    if (w === 1760) return 'XXL';
     return w + '';
   }
 
@@ -333,6 +342,7 @@ function PerfectMarkdown() {
           { option: '600', label: 'Medium' },
           { option: '800', label: 'Large' },
           { option: '1200', label: 'Full' },
+          { option: '1760', label: 'XXL' },
         ],
       },
       {
@@ -652,9 +662,6 @@ function PerfectMarkdown() {
             key: 'th' + thi,
             width: colWidth,
             padding: 10,
-            stroke: theme.border,
-            strokeWidth: 1,
-            strokeAlign: 'inside',
             direction: 'horizontal',
             wrap: true,
             verticalAlignItems: 'center',
@@ -697,9 +704,6 @@ function PerfectMarkdown() {
               key: 'td' + ri + '-' + tci,
               width: colWidth,
               padding: 10,
-              stroke: theme.border,
-              strokeWidth: 1,
-              strokeAlign: 'inside',
               direction: 'horizontal',
               wrap: true,
               verticalAlignItems: 'center',
@@ -717,8 +721,6 @@ function PerfectMarkdown() {
           h(AutoLayout, {
             direction: 'vertical',
             width: cw,
-            stroke: theme.border,
-            strokeWidth: 1,
             cornerRadius: 6,
             overflow: 'hidden',
           }, tableRows)
@@ -728,44 +730,114 @@ function PerfectMarkdown() {
   }
 
   return h(AutoLayout, {
-    name: 'Markdown Table Notes',
+    name: 'Craft#DS md notes',
     direction: 'vertical',
     width: w,
     fill: theme.background,
-    cornerRadius: 8,
+    cornerRadius: 12,
+    stroke: [
+      {
+        type: 'gradient-linear',
+        gradientHandlePositions: [
+          { x: 0, y: 0 },
+          { x: 1, y: 1 },
+          { x: 0, y: 1 },
+        ],
+        gradientStops: [
+          { position: 0,   color: { r: 0.231, g: 0.510, b: 0.965, a: 1 } },
+          { position: 0.5, color: { r: 0.659, g: 0.333, b: 0.969, a: 1 } },
+          { position: 1,   color: { r: 0.925, g: 0.286, b: 0.600, a: 1 } },
+        ],
+      },
+    ],
+    strokeWidth: 2,
+    strokeAlign: 'inside',
     effect: { type: 'drop-shadow', color: { r: 0, g: 0, b: 0, a: 0.1 }, offset: { x: 0, y: 2 }, blur: 8 },
   },
     h(AutoLayout, {
       direction: 'horizontal',
       width: 'fill-parent',
       padding: { horizontal: 12, vertical: 8 },
-      fill: '#1a1a1a',
-      cornerRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 },
+      fill: tn === 'light' ? '#ffffff' : '#1a1a1a',
+      stroke: tn === 'light' ? '#e5e7eb' : '#1a1a1a',
+      strokeWidth: 1,
+      strokeAlign: 'inside',
+      cornerRadius: { topLeft: 12, topRight: 12, bottomLeft: 0, bottomRight: 0 },
       verticalAlignItems: 'center',
     },
       h(AutoLayout, { width: 'fill-parent' },
-        h(Text, { fontSize: 13, fontWeight: 600, fill: '#a855f7' }, 'Md '),
-        h(Text, { fontSize: 13, fill: '#fff' }, 'Markdown Table Notes')
+        h(Image, {
+          width: 155,
+          height: 36,
+          src: LOGO_SRC,
+        })
       ),
       h(AutoLayout, {
-        padding: { horizontal: 10, vertical: 6 },
-        fill: '#333',
-        cornerRadius: 4,
-        hoverStyle: { fill: '#444' },
-        onClick: function() {
-          return new Promise(function(resolve) {
-            var esc = md.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            figma.showUI('<html><head><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;padding:16px;height:100vh;display:flex;flex-direction:column;background:#f5f5f5}textarea{flex:1;width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-family:monospace;font-size:13px;resize:none}button{margin-top:12px;padding:10px 20px;background:#0066ff;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px}</style></head><body><textarea id="e">' + esc + '</textarea><button onclick="parent.postMessage({pluginMessage:{t:\'s\',v:document.getElementById(\'e\').value}},\'*\')">Save</button></body></html>', { width: 500, height: 400 });
-            figma.ui.onmessage = function(msg) {
-              if (msg.t === 's') setMd(msg.v);
-              figma.closePlugin();
-              resolve();
-            };
-          });
-        },
+        direction: 'horizontal',
+        spacing: 6,
+        flexShrink: 0,
       },
-        h(Text, { fontSize: 12, fill: '#fff' }, 'Edit')
+        h(AutoLayout, {
+          padding: { horizontal: 10, vertical: 6 },
+          fill: tn === 'light' ? '#f3f4f6' : '#333333',
+          stroke: tn === 'light' ? '#d1d5db' : '#333333',
+          strokeWidth: 1,
+          cornerRadius: 4,
+          hoverStyle: { fill: tn === 'light' ? '#e5e7eb' : '#444444' },
+          onClick: function() {
+            return new Promise(function(resolve) {
+              var esc = md.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              figma.showUI('<html><head><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;padding:16px;height:100vh;display:flex;flex-direction:column;background:#f5f5f5}textarea{flex:1;width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-family:monospace;font-size:13px;resize:none}button{margin-top:12px;padding:10px 20px;background:#0066ff;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px}</style></head><body><textarea id="e">' + esc + '</textarea><button onclick="parent.postMessage({pluginMessage:{t:\'s\',v:document.getElementById(\'e\').value}},\'*\')">Save</button></body></html>', { width: 500, height: 400 });
+              figma.ui.onmessage = function(msg) {
+                if (msg.t === 's') setMd(msg.v);
+                figma.closePlugin();
+                resolve();
+              };
+            });
+          },
+        },
+          h(Text, { fontSize: 12, fill: tn === 'light' ? '#374151' : '#ffffff' }, 'Edit')
+        ),
+        h(AutoLayout, {
+          padding: { horizontal: 10, vertical: 6 },
+          fill: tn === 'light' ? '#f3f4f6' : '#333333',
+          stroke: tn === 'light' ? '#d1d5db' : '#333333',
+          strokeWidth: 1,
+          cornerRadius: 4,
+          hoverStyle: { fill: tn === 'light' ? '#e5e7eb' : '#444444' },
+          onClick: function() {
+            return new Promise(function(resolve) {
+              var escaped = md.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              figma.showUI('<html><body><textarea id="t">' + escaped + '</textarea><script>var t=document.getElementById("t");t.select();document.execCommand("copy");parent.postMessage({pluginMessage:{t:"done"}},"*");<\/script></body></html>', { width: 1, height: 1, title: '' });
+              figma.ui.onmessage = function(msg) {
+                if (msg.t === 'done') {
+                  figma.closePlugin();
+                  figma.notify('✓ Markdown copied!', { timeout: 2000 });
+                  resolve();
+                }
+              };
+            });
+          },
+        },
+          h(Text, { fontSize: 12, fill: tn === 'light' ? '#374151' : '#ffffff' }, 'Copy md')
+        )
       )
+    ),
+    h(AutoLayout, {
+      direction: 'vertical',
+      width: 'fill-parent',
+      padding: { top: 20, horizontal: 20, bottom: 0 },
+    },
+      h(Input, {
+        value: title,
+        placeholder: 'Add a title…',
+        onTextEditEnd: function(e) { setTitle(e.characters); },
+        fontSize: 24,
+        fontWeight: 700,
+        fill: tn === 'light' ? '#1a1a1a' : '#f0f0f0',
+        width: 'fill-parent',
+        inputBehavior: 'truncate',
+      })
     ),
     h(AutoLayout, {
       direction: 'vertical',

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Widget Preview — Craft#DS md notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      background: #e5e5e5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 80px;
+      gap: 20px;
+    }
+
+    /* ── Toolbar ─────────────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 18px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      font-size: 12px;
+      color: #555;
+      position: sticky;
+      top: 16px;
+      z-index: 10;
+    }
+    .toolbar label { font-weight: 600; color: #333; }
+    .toolbar select {
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      background: #fafafa;
+      cursor: pointer;
+    }
+    .toolbar input[type=range] { width: 110px; accent-color: #a855f7; cursor: pointer; }
+    .toolbar .val { min-width: 38px; font-variant-numeric: tabular-nums; font-weight: 600; color: #333; }
+    .toolbar .sep { width: 1px; height: 20px; background: #e0e0e0; }
+
+    /* ── Figma canvas background ─────────────────────────── */
+    .canvas {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      background:
+        radial-gradient(circle, #ccc 1px, transparent 1px);
+      background-size: 20px 20px;
+      border-radius: 12px;
+    }
+
+    /* ── Widget shell (valores exactos del código) ───────── */
+    .widget-wrapper {
+      border-radius: 14px;
+      padding: 2px;
+      background: linear-gradient(116deg, #3B82F6 0%, #A855F7 50%, #EC4899 100%);
+      box-shadow: 0 2px 8px rgba(0,0,0,.10);
+      transition: width .15s ease;
+      display: inline-flex;
+    }
+    .widget {
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* ── HEADER — valores exactos de widget.tsx ──────────── */
+    .widget-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .widget.light .widget-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .widget.dark .widget-header {
+      background: #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .header-logo {
+      height: 46px;
+      width: auto;
+      display: block;
+    }
+
+    /* AutoLayout { padding:{h:10,v:6}, fill: theme-dependent, cornerRadius:4 } */
+    .header-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      font-family: inherit;
+      transition: background .12s;
+      flex-shrink: 0;
+    }
+    .widget.light .header-btn { background: #f3f4f6; color: #374151; border-color: #d1d5db; }
+    .widget.light .header-btn:hover { background: #e5e7eb; }
+    .widget.dark  .header-btn { background: #333333; color: #ffffff; border-color: #333333; }
+    .widget.dark  .header-btn:hover { background: #444444; }
+
+    /* ── Widget body ─────────────────────────────────────── */
+    /* AutoLayout { direction:'vertical', padding:20 } */
+    .widget-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .widget.light .widget-body { background: #ffffff; }
+    .widget.dark  .widget-body { background: #1e1e1e; }
+
+    /* ── Markdown elements (valores exactos de widget.tsx) ── */
+
+    /* Heading: fontSize 32,28,24,20,16,12 / fontWeight:700 / padding top:12 bottom:8 */
+    .md-h1 { font-size: 32px; font-weight: 700; padding: 12px 0 8px; line-height: 1.25; }
+    .md-h2 { font-size: 28px; font-weight: 700; padding: 12px 0 8px; line-height: 1.25; }
+    .md-h3 { font-size: 24px; font-weight: 700; padding: 12px 0 8px; line-height: 1.25; }
+    .md-h4 { font-size: 20px; font-weight: 700; padding: 12px 0 8px; line-height: 1.25; }
+    .md-h5 { font-size: 16px; font-weight: 700; padding: 12px 0 8px; line-height: 1.25; }
+    .md-h6 { font-size: 12px; font-weight: 700; padding: 12px 0 8px; line-height: 1.25; }
+    .widget.light .md-h1,.widget.light .md-h2,.widget.light .md-h3,
+    .widget.light .md-h4,.widget.light .md-h5,.widget.light .md-h6 { color: #1a1a1a; }
+    .widget.dark  .md-h1,.widget.dark  .md-h2,.widget.dark  .md-h3,
+    .widget.dark  .md-h4,.widget.dark  .md-h5,.widget.dark  .md-h6 { color: #f0f0f0; }
+
+    /* Paragraph: fontSize:14, padding bottom:8 */
+    .md-p { font-size: 14px; padding-bottom: 8px; line-height: 1.5; }
+    .widget.light .md-p { color: #333333; }
+    .widget.dark  .md-p { color: #e0e0e0; }
+
+    /* List item: fontSize:14, level indent 16px each */
+    .md-li { font-size: 14px; padding: 2px 0 2px 0; line-height: 1.5; display: flex; align-items: flex-start; gap: 6px; }
+    .md-li-bullet { flex-shrink: 0; margin-top: 2px; }
+    .widget.light .md-li { color: #333333; }
+    .widget.dark  .md-li { color: #e0e0e0; }
+
+    /* Ordered list */
+    .md-ol { font-size: 14px; padding: 2px 0; line-height: 1.5; display: flex; gap: 6px; }
+    .widget.light .md-ol { color: #333333; }
+    .widget.dark  .md-ol { color: #e0e0e0; }
+
+    /* Checkbox row: spacing:8, padding bottom:4 */
+    .md-cb { display: flex; align-items: center; gap: 8px; padding-bottom: 4px; font-size: 14px; }
+    .cb-box {
+      width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 9px;
+    }
+    .widget.light .cb-box         { border-color: #d0d7de; background: #ffffff; }
+    .widget.light .cb-box.checked { border-color: #0969da; background: #0969da; color: #fff; }
+    .widget.dark  .cb-box         { border-color: #404040; background: #2d2d2d; }
+    .widget.dark  .cb-box.checked { border-color: #58a6ff; background: #58a6ff; color: #fff; }
+    .widget.light .md-cb { color: #333333; }
+    .widget.dark  .md-cb { color: #e0e0e0; }
+    .cb-text-done { text-decoration: line-through; }
+    .widget.light .cb-text-done { color: #666666; }
+    .widget.dark  .cb-text-done { color: #a0a0a0; }
+
+    /* HR: padding top:12 bottom:12, height:1 */
+    .md-hr { margin: 12px 0; height: 1px; border: none; }
+    .widget.light .md-hr { background: #d0d7de; }
+    .widget.dark  .md-hr { background: #404040; }
+
+    /* Code block: padding 16, cornerRadius:6, spacing:2 between lines */
+    .md-code-block {
+      padding: 8px 0 16px;
+    }
+    .md-code-inner {
+      padding: 16px;
+      border-radius: 6px;
+      border: 1px solid;
+    }
+    .widget.light .md-code-inner { background: #f6f8fa; border-color: #d0d7de; }
+    .widget.dark  .md-code-inner { background: #2d2d2d; border-color: #404040; }
+    .md-code-line {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .widget.light .md-code-line { color: #333333; }
+    .widget.dark  .md-code-line { color: #e0e0e0; }
+
+    /* Inline code */
+    .md-inline-code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 13px;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    .widget.light .md-inline-code { background: #f6f8fa; color: #24292e; }
+    .widget.dark  .md-inline-code { background: #2d2d2d; color: #c9d1d9; }
+
+    /* Bold / Italic */
+    .md-bold { font-weight: 700; }
+    .md-italic { font-style: italic; }
+    .md-bolditalic { font-weight: 700; font-style: italic; }
+    .md-strike { text-decoration: line-through; }
+    .widget.light .md-strike { color: #666666; }
+    .widget.dark  .md-strike { color: #a0a0a0; }
+
+    /* Link */
+    .md-link { text-decoration: underline; cursor: pointer; }
+    .widget.light .md-link { color: #0969da; }
+    .widget.dark  .md-link { color: #58a6ff; }
+
+    /* Color swatch */
+    .md-swatch { display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; }
+    .swatch-dot { width: 12px; height: 12px; border-radius: 2px; display: inline-block; border: 1px solid rgba(0,0,0,.15); flex-shrink: 0; }
+    .swatch-code { font-family: 'Source Code Pro', monospace; font-size: 13px; }
+    .widget.light .swatch-code { color: #333333; }
+    .widget.dark  .swatch-code { color: #e0e0e0; }
+
+    /* Table: cornerRadius:6, overflow hidden, padding top:8 bottom:16 */
+    .md-table-wrap { padding: 8px 0 16px; }
+    .md-table-outer { border-radius: 6px; overflow: hidden; }
+    .md-table { width: 100%; border-collapse: collapse; }
+    .md-th, .md-td { padding: 10px; font-size: 14px; border: none; text-align: left; }
+    .md-th { font-weight: 600; }
+    .widget.light .md-th { background: #EFF5FF; color: #1a1a1a; }
+    .widget.dark  .md-th { background: #323232; color: #f0f0f0; }
+    .widget.light .md-td { color: #333333; }
+    .widget.dark  .md-td { color: #e0e0e0; }
+    .widget.light .md-tr-even td { background: #f9fafb; }
+    .widget.dark  .md-tr-even td { background: #252525; }
+    .widget.light .md-tr-odd  td { background: #ffffff; }
+    .widget.dark  .md-tr-odd  td { background: #1e1e1e; }
+
+    /* ── Editor modal (figma.showUI) ─────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    /* Figma plugin window chrome */
+    .figma-window {
+      width: 500px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 48px rgba(0,0,0,.5);
+      display: flex;
+      flex-direction: column;
+    }
+    .figma-titlebar {
+      height: 32px;
+      background: #2c2c2c;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .figma-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .figma-dot.r { background: #ff5f57; }
+    .figma-dot.y { background: #febc2e; }
+    .figma-dot.g { background: #28c840; }
+    .figma-titlebar-name { font-size: 12px; color: #999; margin-left: 8px; }
+    /* Exact HTML from figma.showUI */
+    .plugin-body {
+      font-family: system-ui, sans-serif;
+      padding: 16px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      background: #f5f5f5;
+    }
+    .plugin-body textarea {
+      flex: 1;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 13px;
+      resize: none;
+      outline: none;
+    }
+    .plugin-body textarea:focus { border-color: #0066ff; }
+    .plugin-body button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      background: #0066ff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .plugin-body button:hover { background: #0052cc; }
+  </style>
+</head>
+<body>
+
+  <!-- Editor modal (figma.showUI) -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="figma-window">
+      <div class="figma-titlebar">
+        <span class="figma-dot r"></span>
+        <span class="figma-dot y"></span>
+        <span class="figma-dot g"></span>
+        <span class="figma-titlebar-name">Craft#DS md notes</span>
+      </div>
+      <div class="plugin-body">
+        <textarea id="editorTextarea"></textarea>
+        <button id="btnSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <label>Tema</label>
+    <select id="themeSelect">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+    <div class="sep"></div>
+    <label>Ancho</label>
+    <input type="range" id="widthRange" min="400" max="1760" step="200" value="600" />
+    <span class="val" id="widthVal">600px</span>
+  </div>
+
+  <!-- Figma canvas -->
+  <div class="canvas">
+    <div class="widget-wrapper" id="widgetWrapper" style="width:600px">
+    <div class="widget light" id="widget">
+
+      <!-- HEADER -->
+      <div class="widget-header">
+        <div class="header-title">
+          <img class="header-logo" src="src/logo.png" alt="Craft#DS md notes" />
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;margin-left:auto">
+          <button class="header-btn" id="editBtn">Edit</button>
+          <button class="header-btn" id="copyBtn">Copy md</button>
+        </div>
+      </div>
+
+      <!-- TITLE -->
+      <div id="titleArea" style="padding: 20px 20px 0; background: #ffffff;">
+        <input
+          id="widgetTitle"
+          type="text"
+          placeholder="Add a title…"
+          style="width:100%;border:none;outline:none;font-size:24px;font-weight:700;background:transparent;font-family:inherit;color:#1a1a1a;caret-color:#a855f7"
+        />
+      </div>
+
+      <!-- BODY — rendered by JS -->
+      <div class="widget-body" id="widgetBody"></div>
+
+    </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Default markdown (igual que DEFAULT_MD en widget.tsx) ── */
+    const DEFAULT_MD = `## Color tokens
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| primary | #1a4cb3 | Buttons, links |
+| secondary | #a855f7 | Accents, badges |
+| error | #ba1b1b | Errors, alerts |
+| surface | #e3e6eb | Backgrounds |
+| on-surface | #1a1a1a | Body text |
+
+## Spacing scale
+
+| Token | px | rem |
+|-------|----|-----|
+| space-1 | 4px | 0.25rem |
+| space-2 | 8px | 0.5rem |
+| space-4 | 16px | 1rem |
+| space-8 | 32px | 2rem |
+
+## Status
+
+- [x] Define color palette
+- [x] Define spacing scale
+- [ ] Document typography
+- [ ] Publish to Storybook`;
+
+    let currentMd = DEFAULT_MD;
+
+    /* ── Inline parser (replica de parseInlineElements) ── */
+    function parseInline(text) {
+      const els = [];
+      let rem = text;
+      while (rem.length > 0) {
+        let m;
+        if ((m = rem.match(/^\*\*\*(.+?)\*\*\*/))) { els.push({t:'bolditalic',x:m[1]}); rem=rem.slice(m[0].length); continue; }
+        if ((m = rem.match(/^\*\*(.+?)\*\*/)) || (m = rem.match(/^__(.+?)__/))) { els.push({t:'bold',x:m[1]}); rem=rem.slice(m[0].length); continue; }
+        if ((m = rem.match(/^\*([^*]+?)\*/)) || (m = rem.match(/^_([^_]+?)_/))) { els.push({t:'italic',x:m[1]}); rem=rem.slice(m[0].length); continue; }
+        if ((m = rem.match(/^~~(.+?)~~/))) { els.push({t:'strike',x:m[1]}); rem=rem.slice(m[0].length); continue; }
+        if ((m = rem.match(/^`([^`]+?)`/))) { els.push({t:'code',x:m[1]}); rem=rem.slice(m[0].length); continue; }
+        if ((m = rem.match(/^\[([^\]]+)\]\(([^)]+)\)/))) { els.push({t:'link',x:m[1],url:m[2]}); rem=rem.slice(m[0].length); continue; }
+        if ((m = rem.match(/^(#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8}))\b/))) {
+          let h = m[1].slice(1);
+          let norm = m[1];
+          if (h.length===3) norm='#'+h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+          else if (h.length===8) norm='#'+h.slice(0,6);
+          els.push({t:'color',x:m[1],color:norm}); rem=rem.slice(m[0].length); continue;
+        }
+        const next = rem.search(/[\*_~`\[#]/);
+        if (next===-1) { els.push({t:'text',x:rem}); break; }
+        else if (next===0) { els.push({t:'text',x:rem[0]}); rem=rem.slice(1); }
+        else { els.push({t:'text',x:rem.slice(0,next)}); rem=rem.slice(next); }
+      }
+      return els;
+    }
+
+    function renderInline(els) {
+      return els.map(el => {
+        if (el.t==='bold')      return `<span class="md-bold">${esc(el.x)}</span>`;
+        if (el.t==='italic')    return `<span class="md-italic">${esc(el.x)}</span>`;
+        if (el.t==='bolditalic')return `<span class="md-bolditalic">${esc(el.x)}</span>`;
+        if (el.t==='strike')    return `<span class="md-strike">${esc(el.x)}</span>`;
+        if (el.t==='code')      return `<span class="md-inline-code">${esc(el.x)}</span>`;
+        if (el.t==='link')      return `<span class="md-link">${esc(el.x)}</span>`;
+        if (el.t==='color')     return `<span class="md-swatch"><span class="swatch-dot" style="background:${el.color}"></span><span class="swatch-code">${esc(el.x)}</span></span>`;
+        return esc(el.x);
+      }).join('');
+    }
+
+    function esc(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    /* ── Block parser (replica de parseMarkdown) ── */
+    function parseMarkdown(md) {
+      const blocks = [];
+      const lines = md.split('\n');
+      let i = 0;
+      while (i < lines.length) {
+        const line = lines[i];
+        if (line.trim() === '') { i++; continue; }
+        if (/^(-{3,}|\*{3,}|_{3,})$/.test(line.trim())) { blocks.push({t:'hr'}); i++; continue; }
+        const hm = line.match(/^(#{1,6})\s+(.*)$/);
+        if (hm) { blocks.push({t:'h',d:hm[1].length,x:hm[2]}); i++; continue; }
+        if (line.trim().indexOf('```')===0) {
+          const lang = line.trim().slice(3).trim();
+          const codeLines = [];
+          i++;
+          while (i<lines.length && lines[i].trim().indexOf('```')!==0) { codeLines.push(lines[i]); i++; }
+          blocks.push({t:'code',lang,x:codeLines.join('\n')}); i++; continue;
+        }
+        const imgM = line.match(/^!\[([^\]]*)\]\(([^)]+)\)\s*$/);
+        if (imgM) { blocks.push({t:'img',alt:imgM[1],url:imgM[2]}); i++; continue; }
+        if (line.indexOf('|')!==-1 && i+1<lines.length) {
+          const next = lines[i+1];
+          if (/^\|?[\s-:|]+\|?$/.test(next) && next.indexOf('-')!==-1) {
+            const header = parseTableRow(line);
+            i+=2;
+            const rows=[];
+            while (i<lines.length && lines[i].indexOf('|')!==-1 && lines[i].trim()!=='') { rows.push(parseTableRow(lines[i])); i++; }
+            blocks.push({t:'table',header,rows}); continue;
+          }
+        }
+        const cbM = line.match(/^(\s*)[-*+]\s+\[([ xX])\]\s+(.*)$/);
+        if (cbM) { blocks.push({t:'cb',x:cbM[3],checked:cbM[2].toLowerCase()==='x',indent:cbM[1].length}); i++; continue; }
+        const lm = line.match(/^(\s*)[-*+]\s+(.*)$/);
+        if (lm) { blocks.push({t:'li',x:lm[2],level:Math.floor(lm[1].length/2)}); i++; continue; }
+        const nm = line.match(/^(\s*)(\d+)\.\s+(.*)$/);
+        if (nm) { blocks.push({t:'ol',x:nm[3],num:nm[2],level:Math.floor(nm[1].length/2)}); i++; continue; }
+        blocks.push({t:'p',x:line}); i++;
+      }
+      return blocks;
+    }
+
+    function parseTableRow(line) {
+      let t = line.trim();
+      if (t[0]==='|') t=t.slice(1);
+      if (t[t.length-1]==='|') t=t.slice(0,-1);
+      return t.split('|').map(c=>c.trim());
+    }
+
+    /* ── Render markdown to HTML ── */
+    function renderMd(md) {
+      const blocks = parseMarkdown(md);
+      let html = '';
+      for (const b of blocks) {
+        if (b.t==='h') {
+          const fs = [32,28,24,20,16,12][b.d-1];
+          html += `<div class="md-h${b.d}" style="font-size:${fs}px">${renderInline(parseInline(b.x))}</div>`;
+        }
+        else if (b.t==='p') {
+          html += `<div class="md-p">${renderInline(parseInline(b.x))}</div>`;
+        }
+        else if (b.t==='li') {
+          const pad = b.level * 16;
+          html += `<div class="md-li" style="padding-left:${pad}px"><span class="md-li-bullet">•</span><span>${renderInline(parseInline(b.x))}</span></div>`;
+        }
+        else if (b.t==='ol') {
+          const pad = b.level * 16;
+          html += `<div class="md-ol" style="padding-left:${pad}px"><span style="min-width:18px;flex-shrink:0">${esc(b.num)}.</span><span>${renderInline(parseInline(b.x))}</span></div>`;
+        }
+        else if (b.t==='cb') {
+          const pad = b.indent * 8;
+          const checked = b.checked;
+          const boxClass = 'cb-box' + (checked ? ' checked' : '');
+          const checkMark = checked ? '✓' : '';
+          const textClass = checked ? 'cb-text-done' : '';
+          html += `<div class="md-cb" style="padding-left:${pad}px"><span class="${boxClass}">${checkMark}</span><span class="${textClass}">${renderInline(parseInline(b.x))}</span></div>`;
+        }
+        else if (b.t==='hr') {
+          html += `<hr class="md-hr" />`;
+        }
+        else if (b.t==='code') {
+          const lines = b.x.split('\n').map(l => `<div class="md-code-line">${esc(l)||' '}</div>`).join('');
+          html += `<div class="md-code-block"><div class="md-code-inner">${lines}</div></div>`;
+        }
+        else if (b.t==='table') {
+          const colCount = b.header.length;
+          let thead = '<tr>' + b.header.map(h => `<th class="md-th">${renderInline(parseInline(h))}</th>`).join('') + '</tr>';
+          let tbody = b.rows.map((row, ri) => {
+            const cls = ri%2===0 ? 'md-tr-odd' : 'md-tr-even';
+            return `<tr class="${cls}">` + row.map(c => `<td class="md-td">${renderInline(parseInline(c))}</td>`).join('') + '</tr>';
+          }).join('');
+          html += `<div class="md-table-wrap"><div class="md-table-outer"><table class="md-table"><thead>${thead}</thead><tbody>${tbody}</tbody></table></div></div>`;
+        }
+        else if (b.t==='img') {
+          html += `<div style="padding:8px 0 16px"><div style="height:200px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;border:1px solid">🖼 ${esc(b.alt||'Image')} (${esc(b.url)})</div>${b.alt?`<div style="font-size:12px;font-style:italic;margin-top:4px">${esc(b.alt)}</div>`:''}</div>`;
+        }
+      }
+      return html;
+    }
+
+    /* ── Init & reactivity ── */
+    const widget     = document.getElementById('widget');
+    const widgetBody = document.getElementById('widgetBody');
+    const themeSelect= document.getElementById('themeSelect');
+    const widthRange = document.getElementById('widthRange');
+    const widthVal   = document.getElementById('widthVal');
+    const editBtn    = document.getElementById('editBtn');
+    const overlay    = document.getElementById('modalOverlay');
+    const textarea   = document.getElementById('editorTextarea');
+    const btnSave    = document.getElementById('btnSave');
+
+    function render() {
+      widgetBody.innerHTML = renderMd(currentMd);
+    }
+
+    themeSelect.addEventListener('change', () => {
+      const theme = themeSelect.value;
+      widget.className = 'widget ' + theme;
+      const isDark = theme === 'dark';
+      document.getElementById('widgetTitle').style.color = isDark ? '#f0f0f0' : '#1a1a1a';
+      document.getElementById('titleArea').style.background = isDark ? '#1e1e1e' : '#ffffff';
+    });
+
+    widthRange.addEventListener('input', () => {
+      document.getElementById('widgetWrapper').style.width = widthRange.value + 'px';
+      widthVal.textContent = widthRange.value + 'px';
+    });
+
+    editBtn.addEventListener('click', () => {
+      textarea.value = currentMd;
+      overlay.classList.add('open');
+      textarea.focus();
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(currentMd).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = 'Copy md'; }, 1500);
+      });
+    });
+
+    btnSave.addEventListener('click', () => {
+      currentMd = textarea.value;
+      render();
+      overlay.classList.remove('open');
+    });
+
+    overlay.addEventListener('click', e => { if (e.target===overlay) overlay.classList.remove('open'); });
+
+    render();
+  </script>
+</body>
+</html>
